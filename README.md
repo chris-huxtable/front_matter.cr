@@ -1,7 +1,6 @@
 # front_matter.cr
 
-Separates a files front matter from its content. Unlike Jekyll and other uses this version is agnostic as to what
-format the actual frontmatter is in.
+Separates a files front matter from its content. Unlike Jekyll and others this implementation is format agnostic.
 
 
 ## Installation
