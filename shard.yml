@@ -1,0 +1,9 @@
+name: front_matter
+version: 0.1.0
+
+authors:
+  - Chris Huxtable <chris@huxtable.ca>
+
+crystal: 0.24.2
+
+license: ISC
