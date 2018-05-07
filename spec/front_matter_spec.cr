@@ -62,6 +62,8 @@ describe FrontMatter do
 		it_parses "---\nfrontmatter\n---\n\n", "frontmatter", ""
 		it_parses "---\n\n---\n\n", "", ""
 
+		it_parses "---\nThis\nis\na\nmulti-line\ntest\n---\n\n", "This\nis\na\nmulti-line\ntest", ""
+
 		it_raises_on_parse "frontmatter content"
 		it_raises_on_parse "---\nfrontmatter content"
 		it_raises_on_parse "---frontmatter---\ncontent"

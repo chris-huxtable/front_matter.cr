@@ -34,7 +34,7 @@ module FrontMatter
 			finished, buffer = test_sequence(io, "---\n")
 
 			if ( !finished )
-				front << buffer
+				front << '\n' << buffer
 				next
 			end
 
@@ -92,10 +92,9 @@ module FrontMatter
 
 		expected.each_char() { |expect|
 			char = next_char(input)
-			if ( char == expect )
-				buffer << char
-				next
-			end
+			buffer << char
+
+			next if ( char == expect )
 			return { false, buffer.to_s }
 		}
 
