@@ -1,6 +1,34 @@
 # front_matter.cr
 
+[![Docs](https://img.shields.io/badge/docs-available-brightgreen.svg)](https://chris-huxtable.github.io/front_matter.cr/)
+[![GitHub release](https://img.shields.io/github/release/chris-huxtable/front_matter.cr.svg)](https://github.com/chris-huxtable/front_matter.cr/releases)
+[![Build Status](https://travis-ci.org/chris-huxtable/front_matter.cr.svg?branch=master)](https://travis-ci.org/chris-huxtable/front_matter.cr)
+
 Separates a files front matter from its content. Unlike Jekyll and others this implementation is format agnostic.
+
+## Front Matter?
+
+Front matter is metadata you can add to a document. The data is located between a pair of `---` lines at the start of a document. With this parser the format can be any format you would like.
+```
+---
+The front matter
+---
+
+The content
+```
+
+A more practical and complicated example using YAML front matter with Liquid to generate some HTMLc ould look like below.
+```
+---
+layout: post
+title: Blogging Like a Hacker
+---
+
+<h1>{{ title }}</h1>
+<p>This is the content.</p>
+```
+
+One of the most common, but not the only, uses for front matter is to use this with [Liquid](https://shopify.github.io/liquid/) ([crystal implementation](https://github.com/wmoxam/liquid-crystal)), or a similar templating language.
 
 
 ## Installation
@@ -26,7 +54,7 @@ To process a file:
 FrontMatter.open("/path/to/file") { |front_matter, content_io|
 
 	# Do something with the front matter and content.
-	# Parse the frontmatter as YAML, JSON or something else?
+	# Parse the front matter as YAML, JSON or something else?
 
 }
 ```
@@ -41,16 +69,6 @@ File.open(filename, "r") { |fd|
 
 	}
 }
-```
-
-A file containing front matter is broken into two sections; the front matter, and the content. The front matter is
-contained between a two lines containing `---` and is located at the very start of a file.
-```
----
-This is the frontmatter
----
-
-This is the content
 ```
 
 
