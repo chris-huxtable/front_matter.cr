@@ -4,6 +4,9 @@ version: 0.1.0
 authors:
   - Chris Huxtable <chris@huxtable.ca>
 
+description: |
+  Separates a files front matter from its content
+
 crystal: 0.24.2
 
 license: ISC
