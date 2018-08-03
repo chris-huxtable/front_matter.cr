@@ -36,18 +36,36 @@ end
 
 describe FrontMatter do
 
-	describe "parses files" do
+	describe "parses simple files" do
 
 		it "while trimming newlines" do
-			FrontMatter.open("./spec/sample.txt") { |frontmatter, content|
+			FrontMatter.open("./spec/sample/simple.txt") { |frontmatter, content|
 				frontmatter.should eq("frontmatter")
 				content.gets_to_end.should eq("content\n")
 			}
 		end
 
 		it "without trimming newlines" do
-			FrontMatter.open("./spec/sample.txt", skip_newlines: false) { |frontmatter, content|
+			FrontMatter.open("./spec/sample/simple.txt", skip_newlines: false) { |frontmatter, content|
 				frontmatter.should eq("frontmatter")
+				content.gets_to_end.should eq("\ncontent\n")
+			}
+		end
+
+	end
+
+	describe "parses multi-line files" do
+
+		it "while trimming newlines" do
+			FrontMatter.open("./spec/sample/multi_line.txt") { |frontmatter, content|
+				frontmatter.should eq("multi\nline\nfrontmatter")
+				content.gets_to_end.should eq("content\n")
+			}
+		end
+
+		it "without trimming newlines" do
+			FrontMatter.open("./spec/sample/multi_line.txt", skip_newlines: false) { |frontmatter, content|
+				frontmatter.should eq("multi\nline\nfrontmatter")
 				content.gets_to_end.should eq("\ncontent\n")
 			}
 		end
@@ -62,7 +80,13 @@ describe FrontMatter do
 		it_parses "---\nfrontmatter\n---\n\n", "frontmatter", ""
 		it_parses "---\n\n---\n\n", "", ""
 
-		it_parses "---\nThis\nis\na\nmulti-line\ntest\n---\n\n", "This\nis\na\nmulti-line\ntest", ""
+		it_parses "---\nmulti\nline\nfrontmatter\n---\ncontent\n", "multi\nline\nfrontmatter", "content\n"
+
+		it_parses "---\n\n\nmulti\nline\nfrontmatter\n---\ncontent\n", "multi\nline\nfrontmatter", "content\n"
+		it_parses "---\nmulti\n\n\nline\nfrontmatter\n---\ncontent\n", "multi\n\n\nline\nfrontmatter", "content\n"
+		it_parses "---\nmulti\nline\nfrontmatter\n\n---\ncontent\n", "multi\nline\nfrontmatter", "content\n"
+		it_parses "---\nmulti\nline\nfrontmatter\n\n\n\n---\ncontent\n", "multi\nline\nfrontmatter", "content\n"
+		it_parses "---\nmulti\nline\nfrontmatter\n\n\n\n\n---\ncontent\n", "multi\nline\nfrontmatter", "content\n"
 
 		it_raises_on_parse "frontmatter content"
 		it_raises_on_parse "---\nfrontmatter content"
