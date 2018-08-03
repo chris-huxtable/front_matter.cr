@@ -18,25 +18,19 @@ module FrontMatter
 	# Parses the `IO` given as *io*. Yields the frontmatter as a `String` and the
 	# `IO` positioned at the start of the content to the given block. If
 	# the contents leading newlines are desired setting *skip_newlines* to `false`
-	# will prevent it from being skipped.
+	# will prevent it from being skipped. By defualt the resultant front matter
+	# string will be chomp'ed. To prevent this add the arguement `chomp: false`.
 	#
 	# Note: The provided `IO` must support `#.seek`.
-	def self.parse(io : IO, skip_newlines : Bool = true, &block : String, IO -> Nil) : Nil
+	def self.parse(io : IO, skip_newlines : Bool = true, strip : Bool = true, &block : String, IO -> Nil) : Nil
 		expect_sequence(io, "---\n")
 		front = IO::Memory.new()
 
 		while ( char = next_char(io) )
-			if ( char != '\n' )
-				front << char
-				next
-			end
 
-			finished, buffer = test_sequence(io, "---\n")
-
-			if ( !finished )
-				front << '\n' << buffer
-				next
-			end
+			front << char
+			next if ( char != '\n' )
+			next if ( !test_sequence(io, "---\n") )
 
 			break
 		end
@@ -45,29 +39,33 @@ module FrontMatter
 		io.seek(-1, IO::Seek::Current)
 
 		skip_newlines(io) if ( skip_newlines )
-		yield(front.to_s, io)
+		front = front.to_s
+		front = front.strip if ( strip )
+		yield(front, io)
 	end
 
 	# Opens the file named by filename. Yields the frontmatter as a `String` and the
 	# file descriptor positioned at the start of the content to the given block. If
 	# the contents leading newlines are desired setting *skip_newlines* to `false`
-	# will prevent it from being skipped.
-	def self.open(filename : String, skip_newlines : Bool = true, &block : String, IO::FileDescriptor -> Nil) : Nil
+	# will prevent it from being skipped. By defualt the resultant front matter
+	# string will be stripped. To prevent this add the arguement `strip: false`.
+	def self.open(filename : String, skip_newlines : Bool = true, strip : Bool = true, &block : String, IO::FileDescriptor -> Nil) : Nil
 		File.open(filename, "r") { |fd|
-			parse(fd, skip_newlines) { |fm, fd_n| yield(fm, fd) }
+			parse(fd, skip_newlines, strip: strip) { |fm, fd_n| yield(fm, fd) }
 		}
 	end
 
 	# Parses the `String` given as *string*. Yields the frontmatter as a `String`
 	# and the remaineder as a `String` to the given block. If the contents leading
 	# newlines are desired setting *skip_newlines* to `false` will prevent it
-	# from being skipped.
+	# from being skipped. By defualt the resultant front matter string will be
+	# stripped. To prevent this add the arguement `strip: false`.
 	#
 	# Note: This should not be used in most cases. It converts between `String`
 	# and `IO::Memory` numerous times and is only included to make testing easier.
-	def self.parse(string : String, skip_newlines : Bool = true, &block : String, String -> Nil) : Nil
+	def self.parse(string : String, skip_newlines : Bool = true, strip : Bool = true, &block : String, String -> Nil) : Nil
 		io = IO::Memory.new(string)
-		parse(io, skip_newlines) { |fm, fd| yield(fm, fd.gets_to_end) }
+		parse(io, skip_newlines, strip: strip) { |fm, fd| yield(fm, fd.gets_to_end) }
 	end
 
 	# :nodoc:
@@ -87,18 +85,17 @@ module FrontMatter
 	end
 
 	# :nodoc:
-	private def self.test_sequence(input : IO, expected : String) : { Bool, String }
-		buffer = IO::Memory.new()
-
+	private def self.test_sequence(input : IO, expected : String) : Bool
+		count = 0
 		expected.each_char() { |expect|
 			char = next_char(input)
-			buffer << char
-
+			count += 1
 			next if ( char == expect )
-			return { false, buffer.to_s }
+			input.seek(-count, IO::Seek::Current)
+			return false
 		}
 
-		return { true, expected }
+		return true
 	end
 
 	# :nodoc:
