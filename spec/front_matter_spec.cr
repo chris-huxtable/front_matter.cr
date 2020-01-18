@@ -72,7 +72,7 @@ describe FrontMatter do
 
 	end
 
-	it "parses basics" do
+	describe "parses basics" do
 
 		it_parses "---\nfrontmatter\n---\ncontent\n", "frontmatter", "content\n"
 		it_parses "---\nfrontmatter\n---\n\ncontent\n", "frontmatter", "content\n"
