@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="crystal_docs.project_version" content="HEAD">
+<meta name="crystal_docs.project_name" content="front_matter">
+
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/doc.js"></script>
+
+  <meta name="repository-name" content="front_matter">
+  <title>front_matter HEAD</title>
+  <script type="text/javascript">
+  CrystalDocs.base_path = "";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="index.html">
+          front_matter
+        </a>
+      </h1>
+
+      <span class="project-version">
+        HEAD
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent " data-id="front_matter/FrontMatter" data-name="frontmatter">
+      <a href="FrontMatter.html">FrontMatter</a>
+      
+        <ul>
+  
+  <li class=" " data-id="front_matter/FrontMatter/MalformedError" data-name="frontmatter::malformederror">
+      <a href="FrontMatter/MalformedError.html">MalformedError</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1><a id="front-matter.cr" class="anchor" href="#front-matter.cr">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>front_matter.cr</h1>
+
+<p><a href="https://chris-huxtable.github.io/front_matter.cr/"><img src="https://img.shields.io/badge/docs-available-brightgreen.svg" alt="Docs"/></a>
+<a href="https://github.com/chris-huxtable/front_matter.cr/releases"><img src="https://img.shields.io/github/release/chris-huxtable/front_matter.cr.svg" alt="GitHub release"/></a>
+<a href="https://travis-ci.org/chris-huxtable/front_matter.cr"><img src="https://travis-ci.org/chris-huxtable/front_matter.cr.svg?branch=master" alt="Build Status"/></a></p>
+
+<p>Separates a files front matter from its content. Unlike Jekyll and others this implementation is format agnostic.</p>
+
+<h2><a id="front-matter" class="anchor" href="#front-matter">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Front Matter?</h2>
+
+<p>Front matter is metadata you can add to a document. The data is located between a pair of <code>---</code> lines at the start of a document. With this parser the format can be any format you would like.</p>
+
+<pre><code class="language-crystal">---
+The front matter
+---
+
+The content</code></pre>
+
+<p>A more practical and complicated example using YAML front matter with Liquid to generate some HTMLc ould look like below.</p>
+
+<pre><code class="language-crystal">---
+layout: post
+title: Blogging Like a Hacker
+---
+
+<h1>{{ title }}</h1>
+<p>This is the content.</p></code></pre>
+
+<p>One of the most common, but not the only, uses for front matter is to use this with <a href="https://shopify.github.io/liquid/">Liquid</a> (<a href="https://github.com/wmoxam/liquid-crystal">crystal implementation</a>), or a similar templating language.</p>
+
+<h2><a id="installation" class="anchor" href="#installation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Installation</h2>
+
+<p>Add this to your application's <code>shard.yml</code>:</p>
+
+<pre><code class="language-yaml">dependencies:
+  front_matter:
+    github: chris-huxtable/front_matter.cr</code></pre>
+
+<h2><a id="usage" class="anchor" href="#usage">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Usage</h2>
+
+<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;front_matter&quot;</span></code></pre>
+
+<p>To process a file:</p>
+
+<pre><code class="language-crystal"><span class="t">FrontMatter</span>.open(<span class="s">&quot;/path/to/file&quot;</span>) { <span class="o">|</span>front_matter, content_io<span class="o">|</span>
+
+	<span class="c"># Do something with the front matter and content.</span>
+	<span class="c"># Parse the front matter as YAML, JSON or something else?</span>
+
+}</code></pre>
+
+<p>Alternatively you can parse an <code>IO</code> so long as it supports the <code>#.seek</code> method</p>
+
+<pre><code class="language-crystal"><span class="t">File</span>.open(filename, <span class="s">&quot;r&quot;</span>) { <span class="o">|</span>fd<span class="o">|</span>
+	<span class="t">FrontMatter</span>.parse(fd) { <span class="o">|</span>front_matter, content_io<span class="o">|</span>
+
+		<span class="c"># Do something with the front matter and content.</span>
+		<span class="c"># Parse the front matter as YAML, JSON or something else?</span>
+
+	}
+}</code></pre>
+
+<h2><a id="contributing" class="anchor" href="#contributing">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Contributing</h2>
+
+<ol><li>Fork it ( https://github.com/chris-huxtable/front_matter.cr/fork )</li><li>Create your feature branch (git checkout -b my-new-feature)</li><li>Commit your changes (git commit -am 'Add some feature')</li><li>Push to the branch (git push origin my-new-feature)</li><li>Create a new Pull Request</li></ol>
+
+<h2><a id="contributors" class="anchor" href="#contributors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Contributors</h2>
+
+<ul><li><a href="https://github.com/chris-huxtable">Chris Huxtable</a> - creator, maintainer</li></ul>
+</div>
+</body>
+</html>
