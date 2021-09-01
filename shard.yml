@@ -2,7 +2,7 @@ name: front_matter
 version: 0.1.2
 license: ISC
 
-crystal: 0.24.2
+crystal: ">= 0.24.2, < 2.0.0"
 
 authors:
   - Chris Huxtable <chris@huxtable.ca>
